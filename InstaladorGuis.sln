@@ -1,0 +1,24 @@
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstaladorGuis", "InstaladorGuis\InstaladorGuis.csproj", "{B8D4E21C-7A3F-4C9B-8E12-1F9A0C4D6B20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstaladorGuis.Tests", "InstaladorGuis.Tests\InstaladorGuis.Tests.csproj", "{A0C2586D-2BC8-4B47-BB9E-2C6DD93882CD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B8D4E21C-7A3F-4C9B-8E12-1F9A0C4D6B20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8D4E21C-7A3F-4C9B-8E12-1F9A0C4D6B20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8D4E21C-7A3F-4C9B-8E12-1F9A0C4D6B20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8D4E21C-7A3F-4C9B-8E12-1F9A0C4D6B20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0C2586D-2BC8-4B47-BB9E-2C6DD93882CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0C2586D-2BC8-4B47-BB9E-2C6DD93882CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0C2586D-2BC8-4B47-BB9E-2C6DD93882CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0C2586D-2BC8-4B47-BB9E-2C6DD93882CD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

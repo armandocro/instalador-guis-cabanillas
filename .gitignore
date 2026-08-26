@@ -1,0 +1,39 @@
+## Build results
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+publish/
+
+## IDE
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.csproj.user
+
+## Logs
+*.log
+
+## OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+## Test results
+TestResults/
+coverage/
+StrykerOutput/
+
+## Secrets / certificates
+*.pfx
+*.key
+*.pem
+.env
+.env.local
+
+## Local config (center-specific overrides — do not commit)
+*.local.json
+appsettings.Local.json
+Brands/*.local.json

@@ -1,0 +1,9 @@
+# CODEOWNERS - Instalador de GUIs
+# Los archivos se asignan automaticamente como PR review request
+# Documentacion: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owners for everything
+* @inditex/logistica-dev
+
+# Brand configs may need brand-specific reviewers
+InstaladorGuis/Brands/ @inditex/logistica-dev

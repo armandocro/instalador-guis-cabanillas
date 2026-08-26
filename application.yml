@@ -1,0 +1,9 @@
+---
+metadata:
+  project_key: "INSTALADOR-GUIS"
+  project_name: "instalador-guis"
+  project_type: "desktop"
+  technology: "dotnet-wpf"
+  description: "Instalador de GUIs de almacenes (PULL&BEAR / ZARA HOME) para dispositivos de Inditex"
+  vertical: "logistica"
+  tier: "internal-tool"

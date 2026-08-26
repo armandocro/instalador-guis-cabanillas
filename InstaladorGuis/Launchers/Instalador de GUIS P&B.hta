@@ -1,0 +1,38 @@
+<html>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <title>Instalador de GUIS P&amp;B</title>
+  <hta:application
+    id="app"
+    applicationname="Instalador de GUIS P&amp;B"
+    border="none"
+    caption="no"
+    showintaskbar="no"
+    scroll="no"
+    singleinstance="yes"
+    sysmenu="no"
+    windowstate="minimize"/>
+  <script type="text/javascript">
+    (function () {
+      try {
+        var fso = new ActiveXObject("Scripting.FileSystemObject");
+        var shell = new ActiveXObject("WScript.Shell");
+        var hta = unescape(window.location.pathname.replace(/\//g, "\\"));
+        if (hta.charAt(0) === "\\") hta = hta.substring(1);
+        var dir = fso.GetParentFolderName(hta);
+        var exe = dir + "\\InstaladorGuis-PB.exe";
+        if (!fso.FileExists(exe)) {
+          alert("No se encuentra InstaladorGuis-PB.exe junto a este acceso.\n\nRuta esperada:\n" + exe);
+          window.close();
+          return;
+        }
+        shell.Run('"' + exe + '" --brand=PB', 1, false);
+      } catch (e) {
+        alert("No se pudo iniciar el instalador:\n" + e.message);
+      }
+      window.close();
+    })();
+  </script>
+</head>
+<body></body>
+</html>

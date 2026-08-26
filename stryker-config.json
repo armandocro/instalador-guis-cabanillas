@@ -1,0 +1,7 @@
+{
+  "stryker-config": {
+    "project": "InstaladorGuis/InstaladorGuis.csproj",
+    "test-projects": ["InstaladorGuis.Tests/InstaladorGuis.Tests.csproj"],
+    "target-framework": "net8.0-windows"
+  }
+}

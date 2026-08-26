@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>..\..\GUIS-P&amp;B\images\icono-guis-installer.ico</ApplicationIcon>
+    <RootNamespace>InstaladorGuis</RootNamespace>
+    <AssemblyName>InstaladorGuis</AssemblyName>
+    <Version>1.3.0</Version>
+    <Company>Inditex</Company>
+    <Product>Instalador de GUIs</Product>
+    <Copyright>© Inditex</Copyright>
+    <Description>Instalador de GUIs (PULL&amp;BEAR / ZARA HOME)</Description>
+    <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="InstaladorGuis.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentIcons.Wpf" Version="2.1.337" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Brands\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Launchers\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Resource Include="..\..\GUIS-P&amp;B\images\icono-guis-installer.ico">
+      <Link>Assets\icono-guis-installer.ico</Link>
+    </Resource>
+  </ItemGroup>
+</Project>
