@@ -25,6 +25,7 @@ Desktop.ini
 TestResults/
 coverage/
 StrykerOutput/
+*.trx
 
 ## Secrets / certificates
 *.pfx
