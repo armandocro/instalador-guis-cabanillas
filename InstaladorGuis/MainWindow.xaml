@@ -15,6 +15,73 @@
         SnapsToDevicePixels="True"
         Loaded="OnLoaded">
 
+    <Window.Resources>
+        <ItemsPanelTemplate x:Key="GuiGridPanel">
+            <UniformGrid Columns="2" VerticalAlignment="Top"/>
+        </ItemsPanelTemplate>
+        <Style x:Key="GuiItemContainer" TargetType="ContentPresenter">
+            <Setter Property="VerticalAlignment" Value="Top"/>
+        </Style>
+        <DataTemplate x:Key="GuiCardTemplate" DataType="{x:Type vm:GuiVm}">
+            <Border Margin="4"
+                    Height="48"
+                    Padding="12,0"
+                    CornerRadius="8"
+                    BorderThickness="1"
+                    Background="{Binding CardBackground}"
+                    BorderBrush="{Binding AccentBrush}"
+                    Cursor="Hand"
+                    MouseLeftButtonUp="OnGuiCardClick">
+                <Grid VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <CheckBox Style="{StaticResource GuiCheckBox}"
+                              IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                              VerticalAlignment="Center"
+                              Margin="0,0,10,0"/>
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding Label}"
+                               FontSize="13"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource BrushBlackberry500}"
+                               VerticalAlignment="Center"
+                               TextTrimming="CharacterEllipsis"
+                               Margin="0,0,6,0"/>
+                    <TextBlock Grid.Column="2"
+                               Text="{Binding StatusLabel}"
+                               FontSize="11"
+                               Foreground="{Binding StatusLabelBrush}"
+                               Visibility="{Binding StatusLabelVisible}"
+                               VerticalAlignment="Center"
+                               Margin="0,0,8,0"/>
+                    <Border Grid.Column="3"
+                            Background="{Binding ChipBackground}"
+                            CornerRadius="10"
+                            Padding="7,3,8,3"
+                            VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal">
+                            <ic:FluentIcon Icon="{Binding TypeIcon}"
+                                           IconVariant="Regular"
+                                           FontSize="12"
+                                           Foreground="{Binding ChipForeground}"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,5,0"/>
+                            <TextBlock Text="{Binding Chip}"
+                                       Foreground="{Binding ChipForeground}"
+                                       FontSize="10"
+                                       FontWeight="Bold"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="72"/>
@@ -99,87 +166,24 @@
                                Margin="0,10,0,12"/>
 
                     <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                        <Grid>
-                            <ItemsControl x:Name="GuisItems"
-                                          VerticalAlignment="Top">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <UniformGrid Columns="2"
-                                                     VerticalAlignment="Top"/>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemContainerStyle>
-                                    <Style TargetType="ContentPresenter">
-                                        <Setter Property="VerticalAlignment" Value="Top"/>
-                                    </Style>
-                                </ItemsControl.ItemContainerStyle>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate DataType="{x:Type vm:GuiVm}">
-                                        <Border Margin="4"
-                                                Height="48"
-                                                Padding="12,0"
-                                                CornerRadius="8"
-                                                BorderThickness="1"
-                                                Background="{Binding CardBackground}"
-                                                BorderBrush="{Binding AccentBrush}"
-                                                Cursor="Hand"
-                                                MouseLeftButtonUp="OnGuiCardClick">
-                                            <Grid VerticalAlignment="Center">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                </Grid.ColumnDefinitions>
-                                                <CheckBox Style="{StaticResource GuiCheckBox}"
-                                                          IsChecked="{Binding IsChecked, Mode=TwoWay}"
-                                                          VerticalAlignment="Center"
-                                                          Margin="0,0,10,0"/>
-                                                <TextBlock Grid.Column="1"
-                                                           Text="{Binding Label}"
-                                                           FontSize="13"
-                                                           FontWeight="SemiBold"
-                                                           Foreground="{StaticResource BrushBlackberry500}"
-                                                           VerticalAlignment="Center"
-                                                           TextTrimming="CharacterEllipsis"
-                                                           Margin="0,0,6,0"/>
-                                                <TextBlock Grid.Column="2"
-                                                           Text="{Binding StatusLabel}"
-                                                           FontSize="11"
-                                                           Foreground="{Binding StatusLabelBrush}"
-                                                           Visibility="{Binding StatusLabelVisible}"
-                                                           VerticalAlignment="Center"
-                                                           Margin="0,0,8,0"/>
-                                                <Border Grid.Column="3"
-                                                        Background="{Binding ChipBackground}"
-                                                        CornerRadius="10"
-                                                        Padding="7,3,8,3"
-                                                        VerticalAlignment="Center">
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <ic:FluentIcon Icon="{Binding TypeIcon}"
-                                                                       IconVariant="Regular"
-                                                                       FontSize="12"
-                                                                       Foreground="{Binding ChipForeground}"
-                                                                       VerticalAlignment="Center"
-                                                                       Margin="0,0,5,0"/>
-                                                        <TextBlock Text="{Binding Chip}"
-                                                                   Foreground="{Binding ChipForeground}"
-                                                                   FontSize="10"
-                                                                   FontWeight="Bold"
-                                                                   VerticalAlignment="Center"/>
-                                                    </StackPanel>
-                                                </Border>
-                                            </Grid>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
+                        <StackPanel>
+                            <ItemsControl x:Name="GuisPaqItems"
+                                          VerticalAlignment="Top"
+                                          ItemsPanel="{StaticResource GuiGridPanel}"
+                                          ItemContainerStyle="{StaticResource GuiItemContainer}"
+                                          ItemTemplate="{StaticResource GuiCardTemplate}"/>
+                            <ItemsControl x:Name="GuisPrcItems"
+                                          VerticalAlignment="Top"
+                                          Margin="0,8,0,0"
+                                          ItemsPanel="{StaticResource GuiGridPanel}"
+                                          ItemContainerStyle="{StaticResource GuiItemContainer}"
+                                          ItemTemplate="{StaticResource GuiCardTemplate}"/>
                             <TextBlock x:Name="FilterEmpty"
                                        Text="No hay GUIs de este tipo."
                                        Foreground="{StaticResource BrushBlackberry300}"
                                        Margin="4,16,4,4"
                                        Visibility="Collapsed"/>
-                        </Grid>
+                        </StackPanel>
                     </ScrollViewer>
 
                     <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,12,0,0">

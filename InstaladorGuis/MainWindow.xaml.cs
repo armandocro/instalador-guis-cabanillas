@@ -42,7 +42,9 @@ public partial class MainWindow : Window
         FilterPrc.Visibility = hasPackage && hasClothing ? Visibility.Visible : Visibility.Collapsed;
         PrcLegend.Visibility = hasClothing ? Visibility.Visible : Visibility.Collapsed;
 
-        foreach (var gui in brand.Guis)
+        foreach (var gui in brand.Guis
+                     .OrderBy(g => g.EsPrendas)
+                     .ThenBy(g => g.Label, StringComparer.CurrentCultureIgnoreCase))
         {
             var vm = new GuiVm { Id = gui.Id, Label = gui.Label, EsPrendas = gui.EsPrendas };
             vm.PropertyChanged += OnGuiPropertyChanged;
@@ -330,7 +332,17 @@ public partial class MainWindow : Window
 
     private void RefrescarLista()
     {
-        GuisItems.ItemsSource = _items.Where(i => i.IsVisible).ToList();
+        var paq = _items.Where(i => i.IsVisible && !i.EsPrendas)
+            .OrderBy(i => i.Label, StringComparer.CurrentCultureIgnoreCase)
+            .ToList();
+        var prc = _items.Where(i => i.IsVisible && i.EsPrendas)
+            .OrderBy(i => i.Label, StringComparer.CurrentCultureIgnoreCase)
+            .ToList();
+        GuisPaqItems.ItemsSource = paq;
+        GuisPrcItems.ItemsSource = prc;
+        GuisPaqItems.Visibility = paq.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+        GuisPrcItems.Visibility = prc.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+        GuisPrcItems.Margin = paq.Count > 0 && prc.Count > 0 ? new Thickness(0, 8, 0, 0) : new Thickness(0);
     }
 
     private void SeleccionarTodas(bool valor)

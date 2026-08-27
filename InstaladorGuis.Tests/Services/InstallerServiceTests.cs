@@ -71,4 +71,16 @@ public class InstallerServiceTests
         var result = InstallerService.SanitizeUrl("https://example.com/app&cmd=evil");
         Assert.DoesNotContain("&", result);
     }
+
+    [Theory]
+    [InlineData("PRO MSS Paqueteria Cabanillas.lnk", "PRO MSS Cabanillas.lnk", true)]
+    [InlineData("PRO MSS Cabanillas.lnk", "PRO MSS Cabanillas.lnk", true)]
+    [InlineData("XWMS - pro - paqueteriaCabanillas - 9.4.2.lnk", "XWMS - pro - paqueteriaCabanillas - 7.28.1.lnk", true)]
+    [InlineData("XWMS - pro - prendaColgadaCabanillas - 7.29.0.lnk", "XWMS - pro - paqueteriaCabanillas - 7.28.1.lnk", false)]
+    [InlineData("PRO MSR paqueteria Cabanillas.lnk", "PRO MSS Cabanillas.lnk", false)]
+    [InlineData("GLS PRC CABANILLAS.lnk", "GLS PAQ CABANILLAS.lnk", false)]
+    public void CoincideAccesoDirecto_MatchesFlexibleShortcutNames(string enEscritorio, string mapeado, bool expected)
+    {
+        Assert.Equal(expected, InstallerService.CoincideAccesoDirecto(enEscritorio, [mapeado]));
+    }
 }

@@ -10,12 +10,34 @@ internal static class PathService
     {
         get
         {
-            var desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            if (!string.IsNullOrWhiteSpace(desktop) && Directory.Exists(desktop)) return desktop;
-            var fallback = System.IO.Path.Combine(UserPath, "Desktop");
-            if (Directory.Exists(fallback)) return fallback;
-            return System.IO.Path.Combine(UserPath, "OneDrive", "Desktop");
+            var escritorios = EscritoriosCandidatos();
+            return escritorios.Count > 0
+                ? escritorios[0]
+                : System.IO.Path.Combine(UserPath, "Desktop");
         }
+    }
+
+    public static IReadOnlyList<string> EscritoriosCandidatos()
+    {
+        var list = new List<string>();
+        void Add(string? ruta)
+        {
+            if (string.IsNullOrWhiteSpace(ruta)) return;
+            try
+            {
+                var full = System.IO.Path.GetFullPath(ruta);
+                if (!Directory.Exists(full)) return;
+                if (list.Exists(x => x.Equals(full, StringComparison.OrdinalIgnoreCase))) return;
+                list.Add(full);
+            }
+            catch { /* ignorar rutas inválidas */ }
+        }
+
+        Add(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory));
+        Add(System.IO.Path.Combine(UserPath, "Desktop"));
+        Add(System.IO.Path.Combine(UserPath, "OneDrive", "Desktop"));
+        Add(Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory));
+        return list;
     }
 
     public static string AmigaAppsPath => System.IO.Path.Combine(UserPath, "AppData", "Local", "Inditex", "ijlp", "apps");

@@ -62,7 +62,7 @@ internal sealed class BrandConfig
 
     public string GetLabel(string guiId)
     {
-        var gui = Guis.FirstOrDefault(g => g.Id == guiId);
+        var gui = Guis.FirstOrDefault(g => g.Id.Equals(guiId, StringComparison.OrdinalIgnoreCase));
         return gui?.Label ?? guiId;
     }
 }

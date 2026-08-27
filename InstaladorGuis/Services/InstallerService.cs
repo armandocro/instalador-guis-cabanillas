@@ -9,6 +9,8 @@ internal sealed class InstallerService
 {
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
     private static readonly Regex UrlPattern = new(@"^https?://[\w\-._~:/?#\[\]@!$&'()*+,;=%]+$", RegexOptions.Compiled);
+    private static readonly Regex VersionSuffix = new(@"\s+-\s+\d+(\.\d+)+\s*$", RegexOptions.Compiled);
+    private static readonly Regex VersionToken = new(@"^\d+(\.\d+)+$", RegexOptions.Compiled);
     private readonly BrandConfig _brand;
     private readonly MetricsService _metrics;
     public Dictionary<string, string> UrlMapping { get; private set; } = new(StringComparer.OrdinalIgnoreCase);
@@ -163,14 +165,7 @@ internal sealed class InstallerService
                     }
                 }
                 CommandService.Ejecutar("taskkill", ["/IM", "amglauncher.exe", "/F"], true);
-                if (shortcuts != null)
-                {
-                    foreach (var shortcut in shortcuts)
-                    {
-                        var shortcutPath = System.IO.Path.Combine(PathService.DesktopPath, shortcut);
-                        if (File.Exists(shortcutPath)) File.Delete(shortcutPath);
-                    }
-                }
+                EliminarAccesosDirectos(shortcuts);
                 completed++;
                 resumen.Exitosos.Add(id);
                 if (_metrics.Inicializado) _metrics.RegistrarDesinstalacionGUI(id);
@@ -200,6 +195,84 @@ internal sealed class InstallerService
         Reportar(progreso, 1, 1, "GUI instalada correctamente", null, null);
         if (_metrics.Inicializado)
             _metrics.RegistrarInstalacionGUI("GUI_Personalizada_" + url[(url.LastIndexOf('/') + 1)..]);
+    }
+
+    internal static bool CoincideAccesoDirecto(string nombreArchivo, IEnumerable<string> nombresMapeados)
+    {
+        if (string.IsNullOrWhiteSpace(nombreArchivo) || nombresMapeados == null) return false;
+        var actual = NormalizarNombreLnk(nombreArchivo);
+        var actualStem = Path.GetFileNameWithoutExtension(actual);
+        var actualBase = QuitarSufijoVersion(actualStem);
+        var actualTokens = Tokens(actualStem);
+
+        foreach (var mapeado in nombresMapeados)
+        {
+            if (string.IsNullOrWhiteSpace(mapeado)) continue;
+            var esperado = NormalizarNombreLnk(mapeado);
+            if (actual.Equals(esperado, StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            var esperadoStem = Path.GetFileNameWithoutExtension(esperado);
+            var esperadoBase = QuitarSufijoVersion(esperadoStem);
+            if (actualBase.Equals(esperadoBase, StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            var esperadoTokens = Tokens(esperadoStem);
+            if (esperadoTokens.Count >= 2 && EsSubsecuencia(esperadoTokens, actualTokens))
+                return true;
+        }
+
+        return false;
+    }
+
+    private static void EliminarAccesosDirectos(IReadOnlyList<string>? nombresMapeados)
+    {
+        if (nombresMapeados == null || nombresMapeados.Count == 0) return;
+
+        foreach (var escritorio in PathService.EscritoriosCandidatos())
+        {
+            string[] archivos;
+            try { archivos = Directory.GetFiles(escritorio, "*.lnk"); }
+            catch { continue; }
+
+            foreach (var archivo in archivos)
+            {
+                try
+                {
+                    if (CoincideAccesoDirecto(Path.GetFileName(archivo), nombresMapeados))
+                        File.Delete(archivo);
+                }
+                catch { /* en uso o sin permiso: no abortar la desinstalación */ }
+            }
+        }
+    }
+
+    private static string NormalizarNombreLnk(string nombre)
+    {
+        var n = nombre.Trim();
+        return n.EndsWith(".lnk", StringComparison.OrdinalIgnoreCase) ? n : n + ".lnk";
+    }
+
+    private static string QuitarSufijoVersion(string nombre) =>
+        VersionSuffix.Replace(nombre.Trim(), "").Trim();
+
+    private static List<string> Tokens(string nombre)
+    {
+        return nombre
+            .Split([' ', '-', '_'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Where(t => !VersionToken.IsMatch(t))
+            .ToList();
+    }
+
+    private static bool EsSubsecuencia(IReadOnlyList<string> buscados, IReadOnlyList<string> en)
+    {
+        var i = 0;
+        foreach (var token in en)
+        {
+            if (i < buscados.Count && token.Equals(buscados[i], StringComparison.OrdinalIgnoreCase))
+                i++;
+        }
+        return i == buscados.Count;
     }
 
     private static void Reportar(IProgress<OperationProgress> p, int completed, int total, string status, string? guiId, GuiStatus? visual)
