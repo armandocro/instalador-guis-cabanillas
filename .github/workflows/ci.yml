@@ -2,39 +2,41 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: ["master"]
   pull_request:
-    branches: [main]
+    branches: ["master"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   build-and-test:
     runs-on: windows-latest
+
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: 8.0.x
 
-      - name: Restore dependencies
-        run: dotnet restore
+      - name: Restore
+        run: dotnet restore InstaladorGuis.sln
 
       - name: Build
-        run: dotnet build --no-restore --configuration Release
+        run: dotnet build InstaladorGuis.sln -c Release --no-restore
 
-      - name: Test with coverage
-        run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --results-directory TestResults
+      - name: Test
+        run: dotnet test InstaladorGuis.sln -c Release --no-build --results-directory TestResults --logger "trx;LogFileName=test-results.trx"
 
-      - name: Generate coverage report
-        run: |
-          dotnet tool install --global dotnet-reportgenerator-globaltool
-          reportgenerator "-reports:TestResults/**/coverage.cobertura.xml" "-targetdir:TestResults/coverage" "-reporttypes:OpenCover"
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        continue-on-error: true
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            TestResults/
+            **/TestResults/
